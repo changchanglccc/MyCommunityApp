@@ -8,12 +8,10 @@
 
     <!-- 配置整合mybatis过程 -->
     <!-- 1.配置数据库相关参数properties的属性：${url} -->
-<!--    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>-->
     <context:property-placeholder location="classpath:druid.properties"></context:property-placeholder>
 
 
     <!-- 2.数据库连接池 -->
-<!--    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <!-- 配置连接池属性 -->
         <property name="driverClassName" value="${driverClassName}" />
@@ -23,42 +21,7 @@
         <property name="maxActive" value="10" />
         <property name="initialSize" value="5" />
         <property name="maxWait" value="5000" />
-
-        <!-- c3p0连接池的私有属性 -->
-<!--        <property name="maxPoolSize" value="30" />-->
-<!--        <property name="minPoolSize" value="10" />-->
-<!--        &lt;!&ndash; 关闭连接后不自动commit &ndash;&gt;-->
-<!--        <property name="autoCommitOnClose" value="false" />-->
-<!--        &lt;!&ndash; 获取连接超时时间 &ndash;&gt;-->
-<!--        <property name="checkoutTimeout" value="10000" />-->
-<!--        &lt;!&ndash; 当获取连接失败重试次数 &ndash;&gt;-->
-<!--        <property name="acquireRetryAttempts" value="2" />-->
     </bean>
-
-<!--    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">-->
-<!--        <property name="url" value="${jdbc_url}" />-->
-<!--        <property name="username" value="${jdbc_user}" />-->
-<!--        <property name="password" value="${jdbc_password}" />-->
-
-<!--        <property name="filters" value="stat" />-->
-
-<!--        <property name="maxActive" value="20" />-->
-<!--        <property name="initialSize" value="1" />-->
-<!--        <property name="maxWait" value="6000" />-->
-<!--        <property name="minIdle" value="1" />-->
-
-<!--        <property name="timeBetweenEvictionRunsMillis" value="60000" />-->
-<!--        <property name="minEvictableIdleTimeMillis" value="300000" />-->
-
-<!--        <property name="testWhileIdle" value="true" />-->
-<!--        <property name="testOnBorrow" value="false" />-->
-<!--        <property name="testOnReturn" value="false" />-->
-
-<!--        <property name="poolPreparedStatements" value="true" />-->
-<!--        <property name="maxOpenPreparedStatements" value="20" />-->
-
-<!--        <property name="asyncInit" value="true" />-->
-<!--    </bean>-->
 
     <!-- 3.使用mybatis时，需要配置SqlSessionFactory对象 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
