@@ -1,0 +1,6 @@
+2024-03-26 12:45:15.189 [main] DEBUG ca.lccc.myCommunityApp.dao.ShopDao.insertShop - ==>  Preparing: INSERT INTO tb_shop(owner_id, area_id, shop_category_id, shop_name, shop_desc, shop_addr, phone, shop_img, priority, create_time, last_edit_time, enable_status, advice) VALUES (?,?,?, ?,?,?,?,?, ?,?,?, ?,?) 
+2024-03-26 12:45:15.264 [main] DEBUG ca.lccc.myCommunityApp.dao.ShopDao.insertShop - ==> Parameters: 1(Long), 2(Integer), 1(Long), test-shop(String), test(String), test(String), test(String), test(String), null, 2024-03-26 12:45:15.151(Timestamp), null, 0(Integer), pending(String)
+2024-03-26 12:45:15.320 [main] DEBUG ca.lccc.myCommunityApp.dao.ShopDao.insertShop - <==    Updates: 1
+2024-03-26 12:47:37.261 [main] DEBUG ca.lccc.myCommunityApp.dao.ShopDao.updateShop - ==>  Preparing: update tb_shop SET shop_desc=?, shop_addr=?, last_edit_time=? where shop_id=? 
+2024-03-26 12:47:37.301 [main] DEBUG ca.lccc.myCommunityApp.dao.ShopDao.updateShop - ==> Parameters: test-ddd(String), test-aaa(String), 2024-03-26 12:47:37.175(Timestamp), 84(Long)
+2024-03-26 12:47:37.351 [main] DEBUG ca.lccc.myCommunityApp.dao.ShopDao.updateShop - <==    Updates: 1
