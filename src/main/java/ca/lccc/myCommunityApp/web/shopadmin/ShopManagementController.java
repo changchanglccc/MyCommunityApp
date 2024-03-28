@@ -68,7 +68,7 @@ public class ShopManagementController {
     @ResponseBody
     public Map<String, Object> registerShop(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<String, Object>();
-        
+
         if(!CodeUtil.checkVerifyCode(request)){
             modelMap.put("success", false);
             modelMap.put("errMsg", "error: verify Code failed ");
