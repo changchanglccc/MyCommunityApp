@@ -3,10 +3,10 @@
  */
 $(function() {
     // 用于店铺注册时候的店铺类别 以及 区域列表的 初始化的URL
-    let initUrl = '/communityApp/shopadmin/getshopinitinfo';
+    let initUrl = '/myCommunityApp/shopadmin/getshopinitinfo';
     // 注册店铺的URL
-    let registerShopUrl = '/communityApp/shopadmin/registershop';
-    alert(initUrl);
+    let registerShopUrl = '/myCommunityApp/shopadmin/registershop';
+    // alert(initUrl);
     getShopInitInfo();
 
     // 取得所有二级店铺类别以及区域信息，并分别赋值进类别列表以及区域列表

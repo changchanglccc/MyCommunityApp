@@ -2,10 +2,14 @@ package ca.lccc.myCommunityApp.web.shopadmin;
 
 import ca.lccc.myCommunityApp.dto.ImageHolder;
 import ca.lccc.myCommunityApp.dto.ShopExecution;
+import ca.lccc.myCommunityApp.entity.Area;
 import ca.lccc.myCommunityApp.entity.PersonInfo;
 import ca.lccc.myCommunityApp.entity.Shop;
+import ca.lccc.myCommunityApp.entity.ShopCategory;
 import ca.lccc.myCommunityApp.enums.ShopStateEnum;
 import ca.lccc.myCommunityApp.exceptions.ShopOperationException;
+import ca.lccc.myCommunityApp.service.AreaService;
+import ca.lccc.myCommunityApp.service.ShopCategoryService;
 import ca.lccc.myCommunityApp.service.ShopService;
 import ca.lccc.myCommunityApp.util.HttpServletRequestUtil;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -14,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -31,6 +36,32 @@ import java.util.Map;
 public class ShopManagementController {
     @Autowired
     private ShopService shopService;
+
+    @Autowired
+    private ShopCategoryService shopCategoryService;
+
+    @Autowired
+    private AreaService areaService;
+
+    @RequestMapping(value = "/getshopinitinfo", method = {RequestMethod.GET})
+    @ResponseBody
+    private Map<String, Object> getShopInitInfo() {
+        Map<String, Object> modelMap = new HashMap<String, Object>();
+        List<ShopCategory> shopCategoryList = new ArrayList<ShopCategory>();
+        List<Area> areaList = new ArrayList<Area>();
+        try {
+            shopCategoryList = shopCategoryService.getShopCategoryList(new ShopCategory());
+            areaList = areaService.getAreaList();
+            modelMap.put("shopCategoryList", shopCategoryList);
+            modelMap.put("areaList", areaList);
+            modelMap.put("success", true);
+        } catch (Exception e) {
+            modelMap.put("success", false);
+            modelMap.put("errMsg", e.getMessage());
+        }
+
+        return modelMap;
+    }
 
     @RequestMapping("/registershop")
     @ResponseBody
