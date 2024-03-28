@@ -11,6 +11,7 @@ import ca.lccc.myCommunityApp.exceptions.ShopOperationException;
 import ca.lccc.myCommunityApp.service.AreaService;
 import ca.lccc.myCommunityApp.service.ShopCategoryService;
 import ca.lccc.myCommunityApp.service.ShopService;
+import ca.lccc.myCommunityApp.util.CodeUtil;
 import ca.lccc.myCommunityApp.util.HttpServletRequestUtil;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -67,6 +68,12 @@ public class ShopManagementController {
     @ResponseBody
     public Map<String, Object> registerShop(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<String, Object>();
+        
+        if(!CodeUtil.checkVerifyCode(request)){
+            modelMap.put("success", false);
+            modelMap.put("errMsg", "error: verify Code failed ");
+            return modelMap;
+        }
 
         // 1.接收并转化相应的参数，包括店铺信息以及图片信息
         String shopStr = HttpServletRequestUtil.getString(request, "shopStr");
