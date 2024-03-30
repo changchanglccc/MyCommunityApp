@@ -46,7 +46,8 @@ public class ImageUtil {
             Thumbnails.of(thumbnail.getImage())
                     .size(200, 200)
                     .watermark(Positions.BOTTOM_RIGHT, ImageIO.read(new File(basePath + "/watermark.jpg")), 0.25f)
-                    .outputQuality(0.8f).toFile(dest);
+                    .outputQuality(0.8f)
+                    .toFile(dest);
         } catch (IOException e) {
             logger.error(e.toString());
             throw new RuntimeException("failed to generate thumbnail: " + e.toString());
