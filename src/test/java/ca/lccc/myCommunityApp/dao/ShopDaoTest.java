@@ -18,6 +18,14 @@ public class ShopDaoTest extends BaseTest {
     private ShopDao shopDao;
 
     @Test
+    public void testQueryByShopId() {
+        long shopId = 1L;
+        Shop shop = shopDao.queryByShopId(shopId);
+        assertEquals("montreal", shop.getArea().getAreaName());
+        assertEquals("Computer", shop.getShopCategory().getShopCategoryName());
+    }
+
+    @Test
     public void testInsertShop() {
         Shop shop = new Shop();
         Area area = new Area();
