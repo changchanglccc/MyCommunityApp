@@ -26,6 +26,18 @@ public class ShopServiceTest extends BaseTest {
     private ShopService shopService;
 
     @Test
+    public void testModifyShop() throws ShopOperationException, FileNotFoundException {
+        Shop shop = new Shop();
+        shop.setShopId(1L);
+        shop.setShopName("modified shop name");
+        File shopImg = new File("/Users/chongli/Desktop/image/copy.jpeg");
+        InputStream is = new FileInputStream(shopImg);
+        ImageHolder imageHolder = new ImageHolder("copy_modified.jpg", is);
+        ShopExecution shopExecution = shopService.modifyShop(shop, imageHolder);
+        System.out.println("new images addr: " + shopExecution.getShop().getShopImg());
+    }
+
+    @Test
     public void testAddShop() throws ShopOperationException, FileNotFoundException {
         Shop shop = new Shop();
         PersonInfo owner = new PersonInfo();

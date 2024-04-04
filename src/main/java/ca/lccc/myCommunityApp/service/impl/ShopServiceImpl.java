@@ -21,6 +21,43 @@ public class ShopServiceImpl implements ShopService {
     private ShopDao shopDao;
 
     @Override
+    public Shop getByShopId(long shopId) {
+        return shopDao.queryByShopId(shopId);
+    }
+
+    @Override
+    @Transactional // 因为可能同时有人操作店铺信息，所以要开启事务控制
+    public ShopExecution modifyShop(Shop shop, ImageHolder thumbnail) throws ShopOperationException {
+        if (shop == null || shop.getShopId() == null) {
+            return new ShopExecution(ShopStateEnum.NULL_SHOP);
+        } else {
+            try {
+                // 1.判断是否需要处理图片
+                if (thumbnail.getImage() != null
+                        && thumbnail.getImageName() != null
+                        && !"".equals(thumbnail.getImageName())) {
+                    Shop tempShop = shopDao.queryByShopId(shop.getShopId());
+                    if (tempShop.getShopImg() != null) {
+                        ImageUtil.deleteFileOrPath(tempShop.getShopImg());
+                    }
+                    addShopImg(shop, thumbnail);
+                }
+                // 2.更新店铺信息
+                shop.setLastEditTime(new Date());
+                int effectedNum = shopDao.updateShop(shop);
+                if (effectedNum <= 0) {
+                    return new ShopExecution(ShopStateEnum.INNER_ERROR);
+                } else {
+                    shop = shopDao.queryByShopId(shop.getShopId());
+                    return new ShopExecution(ShopStateEnum.SUCCESS, shop);
+                }
+            } catch (Exception e) {
+                throw new ShopOperationException("modifyShop error:" + e.getMessage());
+            }
+        }
+    }
+
+    @Override
     @Transactional
     public ShopExecution addShop(Shop shop, ImageHolder thumbnail) throws ShopOperationException {
         // 空值判断，空值也要有状态标识
@@ -41,13 +78,13 @@ public class ShopServiceImpl implements ShopService {
                 if (thumbnail.getImage() != null) {
                     // 存储图片
                     try {
-                      addShopImg(shop, thumbnail);
+                        addShopImg(shop, thumbnail);
                     } catch (Exception e) {
                         throw new ShopOperationException("addShopImg error: " + e.getMessage());
                     }
                     // 更新店铺的图片地址
                     effectNum = shopDao.updateShop(shop);
-                    if(effectNum <= 0){
+                    if (effectNum <= 0) {
                         throw new ShopOperationException("Failed to update image address");
                     }
                 }
