@@ -44,6 +44,59 @@ public class ShopManagementController {
     @Autowired
     private AreaService areaService;
 
+    @RequestMapping(value = "/getshopmanagementinfo", method = RequestMethod.GET)
+    @ResponseBody
+    //当不经过店铺列表，直接访问这个页面时，则重定向到shoplist中，如果之前有登录信息，则正常访问页面
+    private Map<String, Object> getShopManagementInfo(HttpServletRequest request) {
+        Map<String, Object> modelMap = new HashMap<String, Object>();
+        long shopId = HttpServletRequestUtil.getLong(request, "shopId");
+        if (shopId <= 0) {  // shopId=-1,说明没有店铺id
+            Object currentShopObj = request.getSession().getAttribute("currentShop");
+            if (currentShopObj == null) { //当前店铺还不存在，要重定向到shoplist中
+                modelMap.put("redirect", true);
+                modelMap.put("url", "/myCommunityApp/shopadmin/shoplist");
+            } else {
+                Shop currentShop = (Shop) currentShopObj;
+                modelMap.put("redirect", false);
+                modelMap.put("shopId", currentShop.getShopId());
+            }
+        } else { // 有店铺id, 给当前店铺设置id等属性，不要重定向
+            Shop currentShop = new Shop();
+            currentShop.setShopId(shopId);
+            request.getSession().setAttribute("currentShop", currentShop);
+            modelMap.put("shopId", shopId);
+            modelMap.put("redirect", false);
+        }
+        return modelMap;
+    }
+
+    @RequestMapping(value = "/getshoplist", method = RequestMethod.GET)
+    @ResponseBody
+    private Map<String, Object> getShopList(HttpServletRequest request) {
+        Map<String, Object> modelMap = new HashMap<String, Object>();
+
+        //todo 由于目前没有实现login，所以先设定默认值
+        PersonInfo user = new PersonInfo();
+        user.setUserId(1L);
+        user.setName("test");
+        request.getSession().setAttribute("user", user);
+        user = (PersonInfo) request.getSession().getAttribute("user");
+        try {
+            Shop shopCondition = new Shop();
+            shopCondition.setOwner(user);
+            ShopExecution se = shopService.getShopList(shopCondition, 0, 100);
+            modelMap.put("shopList", se.getShopList());
+            // 列出店铺成功之后，将店铺放入session中作为权限验证依据，即该帐号只能操作它自己的店铺
+            request.getSession().setAttribute("shopList", se.getShopList());
+            modelMap.put("user", user);
+            modelMap.put("success", true);
+        } catch (Exception e) {
+            modelMap.put("success", false);
+            modelMap.put("errMsg", e.getMessage());
+        }
+        return modelMap;
+    }
+
     @RequestMapping(value = "/modifyshop", method = RequestMethod.POST)
     @ResponseBody
     private Map<String, Object> modifyShop(HttpServletRequest request) {
@@ -153,7 +206,7 @@ public class ShopManagementController {
     public Map<String, Object> registerShop(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<String, Object>();
 
-        if(!CodeUtil.checkVerifyCode(request)){
+        if (!CodeUtil.checkVerifyCode(request)) {
             modelMap.put("success", false);
             modelMap.put("errMsg", "error: verify Code failed ");
             return modelMap;
