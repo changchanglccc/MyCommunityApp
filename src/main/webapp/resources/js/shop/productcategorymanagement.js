@@ -72,12 +72,15 @@ $(function () {
         });
     });
 
+    //temp 表示新增的（未落库，若要删除，直接在前端删除）
     $('.category-wrap').on('click', '.row-product-category.temp .delete',
         function (e) {
             console.log($(this).parent().parent());
             $(this).parent().parent().remove();
 
         });
+
+    // now表示已经添加的 (已落库，若要删除，要在后端删除)
     $('.category-wrap').on('click', '.row-product-category.now .delete',
         function (e) {
             let target = e.currentTarget;

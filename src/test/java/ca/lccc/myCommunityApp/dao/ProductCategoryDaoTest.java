@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)   // Junit 闭环测试，按名称升序批量测试
 public class ProductCategoryDaoTest extends BaseTest {
     @Autowired
     private ProductCategoryDao productCategoryDao;
@@ -24,7 +24,7 @@ public class ProductCategoryDaoTest extends BaseTest {
         List<ProductCategory> productCategoryList = productCategoryDao.queryProductCategoryList(shopId);
 
         System.out.println("product Categories in this shop：" + productCategoryList.size());
-        assertEquals(10, productCategoryList.size());
+        assertEquals(11, productCategoryList.size());
     }
 
     @Test
@@ -44,5 +44,18 @@ public class ProductCategoryDaoTest extends BaseTest {
         productCategoryList.add(productCategory2);
         int effectedNum = productCategoryDao.batchInsertProductCategory(productCategoryList);
         assertEquals(2, effectedNum);
+    }
+
+    @Test
+    public void testCDeleteProductCategory() throws Exception {
+        long shopId = 1;
+        List<ProductCategory> productCategoryList = productCategoryDao.queryProductCategoryList(shopId);
+        for (ProductCategory pc : productCategoryList) {
+            if ("category10".equals(pc.getProductCategoryName()) || "category20".equals(pc.getProductCategoryName())) {
+                int effectedNum = productCategoryDao.deleteProductCategory(pc.getProductCategoryId(),
+                        shopId);
+                assertEquals(1, effectedNum);
+            }
+        }
     }
 }
