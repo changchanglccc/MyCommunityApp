@@ -25,7 +25,7 @@ public class Product {
     // 图片详情图列表，对商品为多对一的映射关系（n vs 1）
     private List<ProductImg> productImgList;
     // 商品类别，意见商品仅属于一个商品类别
-    private ProductCategory produceCategory;
+    private ProductCategory productCategory;
     // 店铺实体类，标明商品属于哪个店铺
     private Shop shop;
 
@@ -125,12 +125,12 @@ public class Product {
         this.productImgList = productImgList;
     }
 
-    public ProductCategory getProduceCategory() {
-        return produceCategory;
+    public ProductCategory getProductCategory() {
+        return productCategory;
     }
 
-    public void setProduceCategory(ProductCategory produceCategory) {
-        this.produceCategory = produceCategory;
+    public void setProductCategory(ProductCategory productCategory) {
+        this.productCategory = productCategory;
     }
 
     public Shop getShop() {
