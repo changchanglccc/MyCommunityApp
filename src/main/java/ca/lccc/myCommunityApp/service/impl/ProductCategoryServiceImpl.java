@@ -1,6 +1,7 @@
 package ca.lccc.myCommunityApp.service.impl;
 
 import ca.lccc.myCommunityApp.dao.ProductCategoryDao;
+import ca.lccc.myCommunityApp.dao.ProductDao;
 import ca.lccc.myCommunityApp.dao.ShopCategoryDao;
 import ca.lccc.myCommunityApp.dto.ProductCategoryExecution;
 import ca.lccc.myCommunityApp.entity.ProductCategory;
@@ -18,6 +19,9 @@ import java.util.List;
 public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Autowired
     private ProductCategoryDao productCategoryDao;
+
+    @Autowired
+    private ProductDao productDao;
 
     @Override
     public List<ProductCategory> getProductCategoryList(long shopId) {
@@ -48,7 +52,15 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Transactional
     public ProductCategoryExecution deleteProductCategory(long productCategoryId, long shopId)
             throws ProductCategoryOperationException {
-        //todo 将此类别下的商品里的类别id置为null，再删除改商品类别
+        // 解除tb_product里的商品与该producategoryId的关联（当删除productCategory的时候，解除）
+        try {
+            int effectedNum = productDao.updateProductCategoryToNull(productCategoryId);
+            if (effectedNum < 0) {
+                throw new ProductCategoryOperationException("product category update failed");
+            }
+        } catch (Exception e) {
+            throw new ProductCategoryOperationException("deleteProductCategory error: " + e.getMessage());
+        }
 
         // 删除该productCategory
         try {
